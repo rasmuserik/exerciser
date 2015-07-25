@@ -1,6 +1,6 @@
 (ns ^:figwheel-always exerciser.core
-    (:require
-              [reagent.core :as reagent :refer [atom]]))
+  (:require
+    [reagent.core :as reagent :refer [atom]]))
 
 (enable-console-print!)
 
@@ -21,5 +21,5 @@
   ;; optionally touch your app-state to force rerendering depending on
   ;; your application
   ;; (swap! app-state update-in [:__figwheel_counter] inc)
-)
+  )
 
