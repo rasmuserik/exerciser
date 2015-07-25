@@ -19,7 +19,9 @@
   :source-paths ["src"]
 
   :clean-targets ^{:protect false} 
-  ["resources/public/js/compiled" "target"]
+  ["resources/public/js/compiled" "target"
+   "figwheel_server.log"
+   ]
 
   :cljsbuild 
   { :builds 

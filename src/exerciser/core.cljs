@@ -14,7 +14,7 @@
   [:h1 (:text @app-state)])
 
 (reagent/render-component [hello-world]
-                          (. js/document (getElementById "app")))
+                          (.getElementById js/document "app"))
 
 
 (defn on-js-reload []
