@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/rasmuserik/exerciser.svg?branch=master)](https://travis-ci.org/rasmuserik/exerciser)
+[![Dependencies Status](http://jarkeeper.com/rasmuserik/exerciser/status.png)](http://jarkeeper.com/rasmuserik/exerciser)
+
+
 # exerciser
 
 FIXME: Write a one-line description of your library/project.
