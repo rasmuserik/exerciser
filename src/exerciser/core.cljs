@@ -9,14 +9,14 @@
 ;; define your app data so that it doesn't get over-written on reload
 
 
-(defonce app-state 
-  (reagent/atom 
+(defonce app-state
+  (reagent/atom
     {
      :state :front-page
      :workouts
      {
       "Basic 7 minutes"
-      {:exercises 
+      {:exercises
        ["Jumping Jacks"
         "Wall Sit"
         "Push Ups"
@@ -28,11 +28,11 @@
         "High Knees Running in Place"
         "Lunge"
         "Push Up and Rotation"
-        "Side Plank"]       
+        "Side Plank"]
        :exercise-time 30
        :break-time 10}
       "Custom 7 minutes"
-      {:exercises 
+      {:exercises
        ["Jumping Jacks"
         "Wall Sit"
         "Abdominal Crunches"
@@ -54,8 +54,8 @@
 
 (defn workout-title [[title desc]]
   (print title)
-  [:li 
-   {:on-click (fn []  
+  [:li
+   {:on-click (fn []
                 (swap! app-state assoc-in [:state] :workout)
                 (swap! app-state assoc-in [:workout] title)
                 )}
@@ -65,10 +65,10 @@
   [:div
    [:h1 "Workouts"]
    (into [:ul]
-    (map workout-title (:workouts @app-state)))])
+         (map workout-title (:workouts @app-state)))])
 
 (defn workout []
-  [:div 
+  [:div
    [:h1 (:workout @app-state)]
    [:button {:on-click #(swap! app-state assoc-in [:state] :front-page)} "back"]
    ]
