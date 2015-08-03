@@ -1,31 +1,14 @@
 [![Build Status](https://travis-ci.org/rasmuserik/exerciser.svg?branch=master)](https://travis-ci.org/rasmuserik/exerciser)
 [![Dependencies Status](http://jarkeeper.com/rasmuserik/exerciser/status.png)](http://jarkeeper.com/rasmuserik/exerciser)
 
-# Exerciser - exercise app
+# wp-front
 
-## Backlog
-
-- actual exercise ticker
-  - current exercise
-    - tick
-  - break with list of all exercises
-- start screen
-  - liste of exercise collections
-- edit exercise
-  - title
-  - name/tags
-- edit exercise collection
-  - break between exercises
-  - time per exercise
-  - time per break
-  - list of exercise names/tags
-
-
-## Overview
-
-FIXME: Write a paragraph about the library/project and highlight its goals.
-
-# Setup
+- TODO: setup dev environment, http://astashov.github.io/blog/2014/07/30/perfect-clojurescript-development-environment-with-vim/
+- setup wordpress with wp-api
+- extract posts, and visualise them
+- rename project
+ 
+# Start
 
 To get an interactive development environment run:
 

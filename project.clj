@@ -14,7 +14,8 @@
   [[lein-cljsbuild "1.0.6"]
    [lein-figwheel "0.3.7"]
    [lein-kibit "0.1.2"]
-   [lein-bikeshed "0.2.0"]]
+   [lein-bikeshed "0.2.0"]
+   [com.cemerick/austin "0.1.4"]]
 
   :source-paths ["src"]
 
