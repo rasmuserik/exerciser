@@ -1,4 +1,4 @@
-(defproject exerciser "0.1.0-SNAPSHOT"
+(defproject wphello "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "https://solsort.com/"
   :license {:name "none-yet" :url "http://TODO"}
@@ -30,9 +30,9 @@
    [{:id "dev"
      :source-paths ["src"]
 
-     :figwheel { :on-jsload "exerciser.core/on-js-reload" }
+     :figwheel { :on-jsload "wphello.core/on-js-reload" }
 
-     :compiler {:main exerciser.core
+     :compiler {:main wphello.core
                 :asset-path "js/compiled/out"
                 :output-to "resources/public/js/compiled/main.js"
                 :output-dir "resources/public/js/compiled/out"
@@ -40,7 +40,7 @@
     {:id "dist"
      :source-paths ["src"]
      :compiler {:output-to "resources/public/js/compiled/main.js"
-                :main exerciser.core
+                :main wphello.core
                 :optimizations :advanced
                 :pretty-print false}}]}
 

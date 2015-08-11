@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/rasmuserik/exerciser.svg?branch=master)](https://travis-ci.org/rasmuserik/exerciser)
-[![Dependencies Status](http://jarkeeper.com/rasmuserik/exerciser/status.png)](http://jarkeeper.com/rasmuserik/exerciser)
+[![Build Status](https://travis-ci.org/rasmuserik/wphello.svg?branch=master)](https://travis-ci.org/rasmuserik/wphello)
+[![Dependencies Status](http://jarkeeper.com/rasmuserik/wphello/status.png)](http://jarkeeper.com/rasmuserik/wphello)
 
 # wp-front
 
