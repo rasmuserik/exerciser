@@ -1,5 +1,6 @@
 (ns ^:figwheel-always exerciser.core
   (:require
+    [goog.style]
     [reagent.core :as reagent :refer []]))
 
 (enable-console-print!)

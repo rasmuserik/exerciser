@@ -15,6 +15,7 @@
    [lein-figwheel "0.3.7"]
    [lein-kibit "0.1.2"]
    [lein-bikeshed "0.2.0"]
+   [cider/cider-nrepl "0.9.1"] 
    ]
 
   :source-paths ["src"]
