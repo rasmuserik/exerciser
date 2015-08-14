@@ -30,12 +30,12 @@
     c))
 
 
-(defn ajaxJSON 
+(defn ajaxJSON
   "Do an ajax request and return the result as JSON"
   [url]
   (let [c (chan)]
     (js/console.log "here1" url)
-    (goog.net.XhrIo/send 
+    (goog.net.XhrIo/send
       url
       (fn [o]
         (js/console.log "here" o)
@@ -47,14 +47,14 @@
 
 (defonce app-state
   (reagent/atom
-    {:state :front-page 
+    {:state :front-page
      :posts []}))
 
 (defn getPostHtml []
   (let [id (:post-id @app-state)
         post (first (filter #(= (% "id") id) (:posts @app-state)))
-        post (or post 
-                 (first (:posts @app-state)) 
+        post (or post
+                 (first (:posts @app-state))
                  {"title" {"rendered" "not loaded"}
                   "content" {"rendered" ""}})]
     [:div
@@ -63,7 +63,7 @@
     ))
 (defn post-line [o]
   [:li
-   [:a 
+   [:a
     {:on-click (fn []
                  (.foundation (js/$ ".off-canvas-wrap") "offcanvas" "hide" "move-right")
                  (swap! app-state assoc :post-id (o "id")))}
@@ -108,8 +108,8 @@
 (js/console.log (clj->js @app-state))
 
 (reagent/render-component
-  [(with-meta  
+  [(with-meta
      main
-     { :component-did-mount #(.foundation (js/$ js/document))})] 
+     { :component-did-mount #(.foundation (js/$ js/document))})]
   (.getElementById js/document "app"))
 (defn on-js-reload [])
