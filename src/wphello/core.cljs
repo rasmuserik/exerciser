@@ -1,92 +1,73 @@
 (ns ^:figwheel-always wphello.core
+  (:require-macros
+    [cljs.core.async.macros :refer  [go alt!]])
+
   (:require
-    [goog.style]
-    [reagent.core :as reagent :refer []]))
+    [goog.net.XhrIo]
+    [reagent.core :as reagent :refer []]
+    [cljs.core.async.impl.channels :refer [ManyToManyChannel]]
+    [cljs.core.async :refer [>! <! chan put! take! timeout close!]]))
 
 (enable-console-print!)
 
-(println "Edits to this text should show up in your developer console.")
 
-;; define your app data so that it doesn't get over-written on reload
+;; http-client/AJAX
+(def -unique-id-counter (atom 0))
+(defn unique-id [] (str "id" (swap! -unique-id-counter inc)))
+(defn ajax [url & {:keys [post-data CORS jsonp]}]
+  (let [c (chan)
+        req (js/XMLHttpRequest.)]
+    (.open req (if post-data "POST" "GET") url true)
+    (when CORS (aset req "withCredentials" true))
+    (aset req "onreadystatechange"
+          (fn []
+            (when (= (aget req "readyState") (or (aget req "DONE") 4))
+              (let [text (aget req "responseText")]
+                (if text
+                  (put! c text)
+                  (close! c))))))
+    (.send req)
+    c))
+
+
+(defn ajaxJSON 
+  "Do an ajax request and return the result as JSON"
+  [url]
+  (let [c (chan)]
+        (js/console.log "here1" url)
+    (goog.net.XhrIo/send 
+      url
+      (fn [o]
+        (js/console.log "here" o)
+        (when
+          (and o (.-target o))
+          (put! c (.getResponseJson (.-target o))))
+        (close! c)))
+      c))
 
 (defonce app-state
   (reagent/atom
-    {
-     :state :front-page
-     :workouts
-     {
-      "Basic 7 minutes"
-      {:exercises
-       ["Jumping Jacks"
-        "Wall Sit"
-        "Push Ups"
-        "Abdominal Crunches"
-        "Step-up Onto Chair"
-        "Squat"
-        "Triceps Dips on Chair"
-        "Plank"
-        "High Knees Running in Place"
-        "Lunge"
-        "Push Up and Rotation"
-        "Side Plank"]
-       :exercise-time 30
-       :break-time 10}
-      "Custom 7 minutes"
-      {:exercises
-       ["Jumping Jacks"
-        "Wall Sit"
-        "Abdominal Crunches"
-        "Step-up Onto Chair"
-        "Squat"
-        "Triceps Dips on Chair"
-        "Plank"
-        "High Knees Running in Place"
-        "Lunge"
-        "Burpee"
-        "Yoga boat"
-        "Pull ups"
-        ]
-       :exercise-time 30
-       :break-time 10}
-      }
-     }
-    ))
-
-(defn workout-title [[title desc]]
-  (print title)
-  [:li
-   {:on-click (fn []
-                (swap! app-state assoc-in [:state] :workout)
-                (swap! app-state assoc-in [:workout] title)
-                )}
-   title])
+    {:state :front-page 
+     :json []}))
 
 (defn front-page []
   [:div
-   [:h1 "Workouts"]
-   (into [:ul]
-         (map workout-title (:workouts @app-state)))])
-
-(defn workout []
-  [:div
-   [:h1 (:workout @app-state)]
-   [:button {:on-click #(swap! app-state assoc-in [:state] :front-page)} "back"]
-   ]
-  )
+   [:h1 "hello"] 
+   [:pre (str (:json @app-state))]])
 
 (defn main []
   (case (:state @app-state)
-    :front-page (front-page)
-    :workout (workout))
+    :front-page (front-page))
   )
 
-(print "hi")
-
-(reagent/render-component [main]
-                          (.getElementById js/document "app"))
-
-(defn on-js-reload []
-  ;; optionally touch your app-state to force rerendering depending on
-  ;; your application
-  ;; (swap! app-state update-in [:__figwheel_counter] inc)
+(go
+  (print  (<! (ajaxJSON "http://localhost/wp-json/wp/v2/posts?page=2")))
   )
+(goog.net.XhrIo/send
+  "http://localhost/wp-json/wp/v2/posts?page=2"
+  #(js/console.log "xhr" (.getResponseJson (.-target  %)))
+
+  )
+
+(reagent/render-component [main] (.getElementById js/document "app"))
+(defn on-js-reload [])

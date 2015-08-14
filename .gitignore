@@ -12,3 +12,4 @@ pom.xml
 .repl
 figwheel_server.log
 target/
+bower_components/
