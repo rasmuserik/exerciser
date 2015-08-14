@@ -34,7 +34,7 @@
   "Do an ajax request and return the result as JSON"
   [url]
   (let [c (chan)]
-        (js/console.log "here1" url)
+    (js/console.log "here1" url)
     (goog.net.XhrIo/send 
       url
       (fn [o]
@@ -43,31 +43,73 @@
           (and o (.-target o))
           (put! c (.getResponseJson (.-target o))))
         (close! c)))
-      c))
+    c))
 
 (defonce app-state
   (reagent/atom
     {:state :front-page 
-     :json []}))
+     :posts []}))
 
+(defn getPostHtml []
+  (let [id (:post-id @app-state)
+        post (first (filter #(= (% "id") id) (:posts @app-state)))
+        post (or post 
+                 (first (:posts @app-state)) 
+                 {"title" {"rendered" "not loaded"}
+                  "content" {"rendered" ""}})]
+    [:div
+     [:h1 ((post "title") "rendered")]
+     [:div {"dangerouslySetInnerHTML" #js  {:__html  ((post "content") "rendered")}}] ]
+    ))
+(defn post-line [o]
+  [:li
+   [:a 
+    {:on-click (fn []
+                 (.foundation (js/$ ".off-canvas-wrap") "offcanvas" "hide" "move-right")
+                 (swap! app-state assoc :post-id (o "id")))}
+    (str ((o "title") "rendered"))]])
 (defn front-page []
-  [:div
-   [:h1 "hello"] 
-   [:pre (str (:json @app-state))]])
+  (js/console.log (clj->js (:post-id @app-state)))
+  [:div.row
+   [:div.large-12.columns
+    [:div.off-canvas-wrap {:data-offcanvas "data-offcanvas"}
+     [:div.inner-wrap {:style {:min-height js/window.innerHeight}}
+      [:nav.tab-bar
+       [:section.left-small [:a.left-off-canvas-toggle.menu-icon [:span]]]
+       [:section.right.tab-bar-section [:h1.title "solsort.com"]]]
+      [:aside.left-off-canvas-menu
+       (into [:ul.off-canvas-list [:li [:label "Posts"]]] (map post-line (:posts @app-state)))]
+      [:section.main-section
+       [:div.row
+        [:div.large-12.columns
+         (getPostHtml)
+         ]
+        ]
+       ]
+      ]]]])
 
 (defn main []
   (case (:state @app-state)
     :front-page (front-page))
   )
 
-(go
-  (print  (<! (ajaxJSON "http://localhost/wp-json/wp/v2/posts?page=2")))
-  )
-(goog.net.XhrIo/send
-  "http://localhost/wp-json/wp/v2/posts?page=2"
-  #(js/console.log "xhr" (.getResponseJson (.-target  %)))
+(defn getPosts []
+  (go
+    (loop [page 1
+           acc []]
+      (let [data (js->clj (<! (ajaxJSON (str "http://solsort.com/wp-json/wp/v2/posts?page=" page))))]
+        (if-not (empty? data)
+          (recur (inc page) (into acc data))
+          acc)))))
+(defn updatePostsState []
+  (go
+    (swap! app-state assoc :posts (<! (getPosts)))))
+(updatePostsState)
+(js/console.log (clj->js @app-state))
 
-  )
-
-(reagent/render-component [main] (.getElementById js/document "app"))
+(reagent/render-component
+  [(with-meta  
+     main
+     { :component-did-mount #(.foundation (js/$ js/document))})] 
+  (.getElementById js/document "app"))
 (defn on-js-reload [])
